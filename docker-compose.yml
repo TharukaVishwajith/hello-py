@@ -11,3 +11,4 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
     restart: unless-stopped
+    container_name: "db-server"
