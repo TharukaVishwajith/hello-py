@@ -46,7 +46,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(post.bp, url_prefix="/post")
 
-    @app.route("/hello")
+    @app.route("/")
     def hello():
         return "Hello, World!"
 
