@@ -7,7 +7,7 @@ from app import post
 from app import db
 
 
-def create_app(test_config=None):
+def create_app(test_config=None, env='DEV'):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
     # app.config.from_mapping(
@@ -38,8 +38,13 @@ def create_app(test_config=None):
     # configure SQLAlchemy
     # app.config.from_mapping(SQLALCHEMY_DATABASE_URI=f'sqlite:///{app.config["DATABASE"]}',
     #                         SQLALCHEMY_TRACK_MODIFICATIONS=False)
-    conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(
-        secrets.dbuser, secrets.dbpassword, secrets.dbhost, secrets.dbname)
+    if env == 'PROD':
+        conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(
+            secrets.prod_dbuser, secrets.prod_dbpassword, secrets.prod_dbhost, secrets.prod_dbname)
+    else:
+        conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(
+            secrets.dbuser, secrets.dbpassword, secrets.dbhost, secrets.dbname)
+
     app.config.from_mapping(SQLALCHEMY_DATABASE_URI=conn,
                             SQLALCHEMY_TRACK_MODIFICATIONS=False)
     sqla.init_app(app)
