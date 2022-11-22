@@ -1,6 +1,9 @@
 import os
 
 from flask import Flask
+from app.sqla import sqla
+
+from app import blog
 
 
 def create_app(test_config=None):
@@ -25,6 +28,8 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    app.register_blueprint(blog.bp, url_prefix="/blog")
 
     @app.route("/hello")
     def hello():
