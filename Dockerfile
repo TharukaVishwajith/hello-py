@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 EXPOSE 5000
-CMD [ "gunicorn","-w","2","-b","0.0.0.0:5000","app:create_app(test_config=None,env=PROD)"]
+CMD [ "gunicorn","-w","2","-b","0.0.0.0:5000","app:create_app(test_config=None,env='PROD')"]
