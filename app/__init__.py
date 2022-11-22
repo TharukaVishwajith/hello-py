@@ -3,7 +3,12 @@ import os
 from flask import Flask
 from app.sqla import sqla
 
-from app import blog
+import pymysql
+
+
+from app import post
+
+from app import db
 
 
 def create_app(test_config=None):
@@ -29,7 +34,21 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    app.register_blueprint(blog.bp, url_prefix="/blog")
+    # register the database commands
+    db.init_app(app)
+
+    from app import secrets
+
+    # configure SQLAlchemy
+    # app.config.from_mapping(SQLALCHEMY_DATABASE_URI=f'sqlite:///{app.config["DATABASE"]}',
+    #                         SQLALCHEMY_TRACK_MODIFICATIONS=False)
+    conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(
+        secrets.dbuser, secrets.dbpassword, secrets.dbhost, secrets.dbname)
+    app.config.from_mapping(SQLALCHEMY_DATABASE_URI=conn,
+                            SQLALCHEMY_TRACK_MODIFICATIONS=False)
+    sqla.init_app(app)
+
+    app.register_blueprint(post.bp, url_prefix="/post")
 
     @app.route("/hello")
     def hello():
